@@ -1,7 +1,7 @@
 import 'bootstrap/dist/css/bootstrap.css';
 import React, { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import {
   MDBBtn,
   MDBContainer,
@@ -13,8 +13,7 @@ import {
   MDBDropdown,
   MDBDropdownToggle,
   MDBDropdownMenu,
-  MDBDropdownItem,
-  MDBRadio
+  MDBDropdownItem
 } from 'mdb-react-ui-kit';
 
 function Registration() {
@@ -32,10 +31,9 @@ function Registration() {
   const [address, setAddress] = useState('');
   const [free, setFree] = useState('');
   const [password, setPassword] = useState('');
-  
-  const history = useNavigate();
-  const navigate = useNavigate();
 
+  const navigate = useNavigate();
+  
 
   const handleNumberOfFloorsChange = (e) => {
     const value = parseInt(e.target.value, 10);
@@ -69,39 +67,33 @@ function Registration() {
     setFloorValues(updatedFloorValues);
   };
 
-  async function submit(e) {
-    e.preventDefault();
-
+  const submit = async () => {
     try {
-        await axios.post("http://localhost:8000/signup", {
-            email,
-            password,
-            parkingName,
-            hrsPay,
-            contact,
-            address,
-            free,
-            numberOfFloors,
-            floorValues,
-            selectOption2,
-            selectedOption
-        })
-        .then(res => {
-            if (res.data === "exist") {
-                alert("User already exists");
-            } else if (res.data === "notexist") {
-                history("/home", { state: { id: email } });
-                alert("User registered successfully");
-            }
-        })
-        .catch(e => {
-            alert("Wrong details. Please try again.");
-            console.log(e);
-        });
-    } catch(e) {
-        console.log(e);
+      const response = await axios.post("http://localhost:8000/registration", {
+        email,
+        password,
+        parkingName,
+        hrsPay,
+        contact,
+        address,
+        free,
+        numberOfFloors,
+        floorValues,
+        selectOption2,
+        selectedOption
+      });
+
+      if (response.data === "exist") {
+        alert("User already exists");
+      } else if (response.data === "notexist") {
+        navigate("/home", { state: { id: email } });
+        alert("User registered successfully");
+      }
+    } catch (e) {
+      alert("Wrong details. Please try again.");
+      console.log(e);
     }
-}
+  };
 
   return (
     <MDBContainer fluid>
@@ -112,72 +104,72 @@ function Registration() {
               <MDBCol md='6'>
                 <h3 className="fw-bold mb-4 pb-2 pb-md-0 mb-md-5">Registration Form</h3>
                 <MDBInput wrapperClass='mb-4' placeholder='Parking Management Name'
-                                        id="form1"
-                                        type="text"
-                                        value={parkingName}
-                                        onChange={(e) => setParkingName(e.target.value)}
-                                        />
+                  id="form1"
+                  type="text"
+                  value={parkingName}
+                  onChange={(e) => setParkingName(e.target.value)}
+                />
                 <MDBInput wrapperClass='mb-4' placeholder='Password'
-                                        id="form1"
-                                        type="password"
-                                        value={password}
-                                        onChange={(e) => setPassword(e.target.value)}
-                                        />                   
+                  id="form1"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
                 <MDBInput wrapperClass='mb-4' placeholder='Parking Hours Fee'
-                                        id="form1"
-                                        type="text"
-                                        value={hrsPay}
-                                        onChange={(e) => setHoursPay(e.target.value)}
-                                        />
+                  id="form1"
+                  type="text"
+                  value={hrsPay}
+                  onChange={(e) => setHoursPay(e.target.value)}
+                />
                 <MDBInput wrapperClass='mb-4' placeholder='Contact Number'
-                                        id="form1"
-                                        type="text"
-                                        value={contact}
-                                        onChange={(e) => setContact(e.target.value)}
-                                        />
-                 <MDBInput wrapperClass='mb-4' placeholder='Email'
-                                        id="form1"
-                                        type="email"
-                                        value={email}
-                                        onChange={(e) => setEmail(e.target.value)}
-                                        />
-                 <MDBInput wrapperClass='mb-4' placeholder='Address'
-                                        id="form1"
-                                        type="address"
-                                        value={address}
-                                        onChange={(e) => setAddress(e.target.value)}
-                                        />
+                  id="form1"
+                  type="text"
+                  value={contact}
+                  onChange={(e) => setContact(e.target.value)}
+                />
+                <MDBInput wrapperClass='mb-4' placeholder='Email'
+                  id="form1"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+                <MDBInput wrapperClass='mb-4' placeholder='Address'
+                  id="form1"
+                  type="address"
+                  value={address}
+                  onChange={(e) => setAddress(e.target.value)}
+                />
                 <MDBInput wrapperClass='mb-4' placeholder='Hours Free'
-                                        id="form1"
-                                        type="address"
-                                        value={free}
-                                        onChange={(e) => setFree(e.target.value)}
-                                        />
+                  id="form1"
+                  type="address"
+                  value={free}
+                  onChange={(e) => setFree(e.target.value)}
+                />
               </MDBCol>
               <MDBCol md='6'>
                 <MDBRow className='justify-content-center'>
                   <MDBCol md='10' className='mt-4'>
-                  <MDBDropdown className="mb-4">
-  <MDBDropdownToggle color="primary" size="md">
-    Parking Type
-  </MDBDropdownToggle>
-  <MDBDropdownMenu className="static-menu">
-    <MDBDropdownItem
-      onClick={() => {
-        handleOptionSelect2('Open Parking');
-      }}
-    >
-      Open Parking
-    </MDBDropdownItem>
-    <MDBDropdownItem
-      onClick={() => {
-        handleOptionSelect('By floor');
-      }}
-    >
-      By floor
-    </MDBDropdownItem>
-  </MDBDropdownMenu>
-</MDBDropdown>
+                    <MDBDropdown className="mb-4">
+                      <MDBDropdownToggle color="primary" size="md">
+                        Parking Type
+                      </MDBDropdownToggle>
+                      <MDBDropdownMenu className="static-menu">
+                        <MDBDropdownItem
+                          onClick={() => {
+                            handleOptionSelect2('Open Parking');
+                          }}
+                        >
+                          Open Parking
+                        </MDBDropdownItem>
+                        <MDBDropdownItem
+                          onClick={() => {
+                            handleOptionSelect('By floor');
+                          }}
+                        >
+                          By floor
+                        </MDBDropdownItem>
+                      </MDBDropdownMenu>
+                    </MDBDropdown>
                   </MDBCol>
                   <MDBCol md='10' className='mt-4'>
                     {showTextBox2 && (
@@ -201,25 +193,34 @@ function Registration() {
                         {numberOfFloors > 0 && (
                           <div>
                             {floorValues.map((value, index) => (
-                              <div key={index}>
-                                <label htmlFor={`floorInput${index}`}>Floor {index + 1}</label>
-                                <MDBInput
-                                  id={`floorInput${index}`}
-                                  type="text"
-                                  value={value}
-                                  onChange={(e) => handleFloorValueChange(index, e.target.value)}
-                                />
-                              </div>
+                              <MDBInput
+                                key={index}
+                                label={`Number of Spaces on Floor ${index + 1}`}
+                                id={`floor${index + 1}`}
+                                type="number"
+                                value={value}
+                                onChange={(e) =>
+                                  handleFloorValueChange(index, e.target.value)
+                                }
+                              />
                             ))}
                           </div>
                         )}
                       </div>
                     )}
                   </MDBCol>
-                  <MDBCol md='10' className='mt-4'>
-                    <MDBBtn className='w-50' size='md' onClick={submit}>Submit</MDBBtn>
-                  </MDBCol>
                 </MDBRow>
+              </MDBCol>
+            </MDBRow>
+            <MDBRow className='justify-content-center mt-5'>
+              <MDBCol md='4'>
+                <MDBBtn
+                  color='primary'
+                  size='lg'
+                  onClick={submit}
+                >
+                  Submit
+                </MDBBtn>
               </MDBCol>
             </MDBRow>
           </MDBCardBody>
